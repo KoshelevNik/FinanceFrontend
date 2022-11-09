@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import ru.finance.my.AppConfiguration;
 import ru.finance.my.dto.LoginRequestDTO;
 import ru.finance.my.view.user.UserView;
 
@@ -47,7 +48,7 @@ public class LoginOkButtonListener implements ComponentEventListener<ClickEvent<
     httpHeaders.set("Content-Type", "application/json");
     HttpEntity<LoginRequestDTO> httpEntity = new HttpEntity<>(loginRequestDTO, httpHeaders);
     try {
-      ResponseEntity<String> response = restTemplate.exchange("http://localhost:8080/login", HttpMethod.POST, httpEntity, String.class);
+      ResponseEntity<String> response = restTemplate.exchange(AppConfiguration.SERVER_HOST + "/login", HttpMethod.POST, httpEntity, String.class);
       List<String> cookies = response.getHeaders().get("Set-Cookie");
       Cookie cookie = new Cookie("TOKEN", cookies.get(0).substring(11, 43));
       cookie.setPath("/");
