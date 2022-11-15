@@ -3,6 +3,7 @@ package ru.finance.my.listeners;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.http.HttpEntity;
@@ -56,7 +57,15 @@ public class RegistrationButtonListener implements ComponentEventListener<ClickE
 
       String url = AppConfiguration.SERVER_HOST + "/registration";
       restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
-    } catch (RestClientException ignored) {}
-    buttonClickEvent.getSource().getUI().get().navigate(LoginView.class);
+      buttonClickEvent.getSource().getUI().get().navigate(LoginView.class);
+    } catch (RestClientException ignored) {
+      Dialog errorDialog = new Dialog();
+
+      errorDialog.add("Invalid login or password!");
+
+      errorDialog.getFooter().add(new Button("Close", e1 -> errorDialog.close()));
+
+      errorDialog.open();
+    }
   }
 }
